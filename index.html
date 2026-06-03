@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Junho 26">
+<meta name="theme-color" content="#080808">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Junho 2026 — Recife</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════
+   DESIGN SYSTEM — TOKENS
+═══════════════════════════════════ */
+:root {
+  /* FIFA 26 Palette */
+  --c-red:    #E8001D;
+  --c-blue:   #0033A0;
+  --c-lime:   #A8C847;
+  --c-yellow: #FFE600;
+  --c-purple: #5B2D8E;
+  --c-cyan:   #00B4CC;
+  --c-white:  #F2F2F2;
+  --c-black:  #080808;
+
+  /* Surface */
+  --s0: #080808;
+  --s1: #101010;
+  --s2: #181818;
+  --s3: #222222;
+  --s4: #2c2c2c;
+
+  /* Text */
+  --t1: #F2F2F2;
+  --t2: #888888;
+  --t3: #444444;
+
+  /* Borders */
+  --b1: rgba(255,255,255,0.06);
+  --b2: rgba(255,255,255,0.12);
+
+  /* Spacing (8px grid) */
+  --sp1: 8px;
+  --sp2: 16px;
+  --sp3: 24px;
+  --sp4: 32px;
+
+  /* Radius */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 18px;
+
+  /* Safe area */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+/* ═══════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { background: var(--s0); scroll-behavior: smooth; }
+body {
+  font-family: 'Barlow', system-ui, sans-serif;
+  background: var(--s0);
+  color: var(--t1);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════
+   SPLASH
+═══════════════════════════════════ */
+#splash {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--s0);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--sp3);
+  transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+#splash.out { opacity: 0; pointer-events: none; }
+
+.splash-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  width: 72px; height: 72px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  animation: splash-grid-in 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes splash-grid-in {
+  from { transform: scale(0.6) rotate(-8deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.splash-grid-q { width: 36px; height: 36px; }
+
+.splash-wordmark {
+  text-align: center;
+  animation: fade-up 0.5s 0.2s ease both;
+}
+.splash-wordmark .line1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--t3);
+}
+.splash-wordmark .line2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px; font-weight: 900; letter-spacing: -1px;
+  line-height: 1; color: var(--t1);
+}
+.splash-wordmark .line3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--t2); margin-top: 4px;
+}
+.splash-bar {
+  width: 48px; height: 2px; background: var(--s3); border-radius: 2px; overflow: hidden;
+  animation: fade-up 0.4s 0.3s ease both;
+}
+.splash-fill {
+  height: 100%; width: 0; background: var(--c-yellow);
+  animation: fill-bar 1s 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes fill-bar { to { width: 100%; } }
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════
+   APP LAYOUT
+═══════════════════════════════════ */
+.app {
+  max-width: 430px; margin: 0 auto;
+  padding-bottom: calc(80px + var(--sab));
+}
+
+/* ═══════════════════════════════════
+   TODAY PANEL — Drop-down hero
+═══════════════════════════════════ */
+.today-panel {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--s0);
+  padding: calc(var(--sat) + var(--sp2)) var(--sp2) 0;
+  transform-origin: top center;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+  padding-bottom: 12px;
+}
+
+/* Faixa de cor da competição do dia */
+.today-accent {
+  height: 3px; width: 100%;
+  margin-bottom: var(--sp2);
+  border-radius: 0;
+  transition: background 0.4s ease;
+  animation: accent-in 0.4s 0.8s ease both;
+}
+@keyframes accent-in { from { scaleX(0); opacity: 0; } to { scaleX(1); opacity: 1; } }
+
+.today-inner {
+  display: flex; align-items: flex-start; gap: var(--sp2);
+  animation: today-drop 0.7s 0.6s cubic-bezier(0.34,1.2,0.64,1) both;
+}
+@keyframes today-drop {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.today-left { flex: 1; min-width: 0; }
+.today-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--t3);
+  margin-bottom: 2px;
+}
+.today-date {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px; font-weight: 900; letter-spacing: -0.5px;
+  line-height: 1; color: var(--t1);
+}
+.today-sub {
+  font-size: 12px; font-weight: 400; color: var(--t2);
+  margin-top: 4px; line-height: 1.4;
+}
+
+.today-daybadge {
+  flex-shrink: 0;
+  width: 52px; height: 52px;
+  background: var(--s2); border: 1px solid var(--b1);
+  border-radius: var(--r-md);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.today-daybadge .db-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px; font-weight: 900; letter-spacing: -1px;
+  line-height: 1; color: var(--c-yellow);
+}
+.today-daybadge .db-lbl {
+  font-size: 8px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--t3); margin-top: 1px;
+}
+
+/* Highlights do dia */
+.today-highlights {
+  margin-top: var(--sp2);
+  display: flex; flex-direction: column; gap: 6px;
+  animation: today-drop 0.7s 0.75s cubic-bezier(0.34,1.2,0.64,1) both;
+}
+.th-card {
+  display: flex; align-items: stretch;
+  border-radius: var(--r-sm); overflow: hidden;
+  border: 1px solid var(--b1);
+  background: var(--s1);
+  min-height: 44px;
+}
+.th-card.th-brasil {
+  background: var(--c-yellow);
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(255,230,0,0.2);
+}
+.th-card.th-brasil.th-brasil-vnl { box-shadow: 0 4px 20px rgba(0,180,204,0.2); }
+.th-card.th-dest {
+  background: var(--s2);
+  border-color: var(--b2);
+}
+.th-accent { width: 4px; flex-shrink: 0; }
+.th-body { flex: 1; padding: 8px 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.th-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 800; letter-spacing: 0.2px;
+  color: var(--t1); line-height: 1.2;
+}
+.th-card.th-brasil .th-title { color: #0A0A0A; font-size: 15px; }
+.th-time { font-size: 11px; font-weight: 500; color: var(--t2); }
+.th-card.th-brasil .th-time { color: rgba(0,0,0,0.55); }
+.th-badge-br {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 800; padding: 1px 7px;
+  border-radius: 4px; background: #009c3b; color: #fff;
+  width: fit-content; margin-top: 2px;
+}
+.th-empty {
+  text-align: center; font-size: 13px; color: var(--t3);
+  padding: var(--sp2) 0; font-style: italic;
+}
+
+/* ═══════════════════════════════════
+   FILTERS GRID
+═══════════════════════════════════ */
+.filters-section {
+  padding: var(--sp2) var(--sp2) 0;
+  animation: today-drop 0.6s 0.9s ease both;
+}
+.filters-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--t3);
+  margin-bottom: var(--sp1);
+}
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.fb {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 9px 6px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--b1);
+  background: var(--s2);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer; color: var(--t2);
+  transition: all 0.15s cubic-bezier(0.4,0,0.2,1);
+  user-select: none;
+  white-space: nowrap;
+}
+.fb:active { transform: scale(0.94); }
+.fb.on { color: var(--s0); border-color: transparent; }
+.fb .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+/* "Todos" ocupa linha inteira */
+.fb[data-cat="all"] { grid-column: span 3; background: var(--s3); color: var(--t2); font-size: 11px; padding: 7px; }
+.fb[data-cat="all"].on { background: var(--t1); color: var(--s0); }
+
+/* ═══════════════════════════════════
+   DIVIDER SEMANA
+═══════════════════════════════════ */
+.week-sep {
+  display: flex; align-items: center; gap: var(--sp1);
+  margin: var(--sp3) var(--sp2) var(--sp1);
+}
+.week-sep-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--t3);
+  white-space: nowrap;
+}
+.week-sep-line { flex: 1; height: 1px; background: var(--b1); }
+
+/* ═══════════════════════════════════
+   DAY CARD
+═══════════════════════════════════ */
+.day-card {
+  margin: 0 var(--sp2) 4px;
+  background: var(--s1);
+  border-radius: var(--r-md);
+  border: 1px solid var(--b1);
+  overflow: hidden;
+  transition: opacity 0.3s, filter 0.3s, border-color 0.2s;
+}
+.day-card.open { border-color: var(--b2); }
+.day-card.today {
+  border: 1.5px solid rgba(255,230,0,0.25);
+  background: linear-gradient(180deg, rgba(255,230,0,0.03) 0%, var(--s1) 50%);
+}
+.day-card.past { opacity: 0.28; filter: grayscale(60%); }
+.day-card.past:hover { opacity: 0.55; filter: grayscale(20%); }
+
+.day-header {
+  display: flex; align-items: center;
+  padding: 12px var(--sp2); gap: var(--sp2);
+  cursor: pointer; user-select: none;
+  transition: background 0.12s;
+}
+.day-header:active { background: rgba(255,255,255,0.02); }
+
+/* Número do dia */
+.day-num {
+  display: flex; flex-direction: column; align-items: center;
+  width: 38px; flex-shrink: 0;
+}
+.dn-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px; font-weight: 900; letter-spacing: -1px;
+  line-height: 1; color: var(--t1);
+}
+.dn-wd {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--t3); margin-top: 1px;
+}
+.day-card.today .dn-number { color: var(--c-yellow); }
+.day-card.today .dn-wd { color: rgba(255,230,0,0.4); }
+
+/* Separador vertical */
+.day-divider {
+  width: 1px; height: 32px; background: var(--b1);
+  flex-shrink: 0;
+}
+
+.day-summary { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.today-badge-inline {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 4px;
+  background: var(--c-yellow); color: var(--s0);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  text-transform: uppercase; width: fit-content;
+  margin-bottom: 2px;
+}
+
+.sum-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+.sp {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.3px;
+  padding: 2px 7px; border-radius: 4px;
+  white-space: nowrap;
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+}
+.free-day { font-size: 12px; color: var(--t3); font-style: italic; }
+.brasil-hint { font-size: 10px; font-weight: 700; color: #4cdb7a; letter-spacing: 0.5px; }
+
+.chevron {
+  width: 16px; height: 16px; flex-shrink: 0; color: var(--t3);
+  transition: transform 0.28s cubic-bezier(0.34,1.2,0.64,1);
+}
+.day-card.open .chevron { transform: rotate(180deg); }
+
+/* ═══════════════════════════════════
+   EVENT LIST
+═══════════════════════════════════ */
+.day-events {
+  display: none; flex-direction: column;
+  gap: 0; /* sem gap — usa bordas */
+  padding: 0 var(--sp2) var(--sp2);
+}
+.day-card.open .day-events { display: flex; }
+
+/* Separador de competição dentro do dia */
+.comp-block { margin-top: 8px; }
+.comp-label {
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 5px;
+}
+.comp-label-bar { width: 3px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+.comp-label-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--t3);
+}
+.comp-events { display: flex; flex-direction: column; gap: 4px; }
+
+/* Event card */
+.ec {
+  display: flex; align-items: stretch;
+  border-radius: var(--r-sm); overflow: hidden;
+  border: 1px solid var(--b1);
+  background: var(--s2);
+  transition: transform 0.12s, border-color 0.12s;
+}
+.ec:active { transform: scale(0.99); }
+.ec-bar { width: 3px; flex-shrink: 0; }
+.ec-body { flex: 1; padding: 9px 12px; }
+.ec-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.2px;
+  color: var(--t1); line-height: 1.3;
+}
+.ec-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; align-items: center; }
+.ec-time {
+  font-size: 11px; font-weight: 500; color: var(--t2);
+  display: flex; align-items: center; gap: 3px;
+}
+.ec-where {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px;
+  background: var(--s3); color: var(--t3);
+  max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Brasil card */
+.ec.ec-brasil {
+  background: var(--c-yellow); border-color: transparent;
+  box-shadow: 0 4px 16px rgba(255,230,0,0.18);
+}
+.ec.ec-brasil .ec-bar { background: #009c3b !important; }
+.ec.ec-brasil .ec-title { color: #0A0A0A; font-size: 15px; font-weight: 900; }
+.ec.ec-brasil .ec-time { color: rgba(0,0,0,0.5); }
+.ec.ec-brasil .ec-where { background: rgba(0,0,0,0.1); color: rgba(0,0,0,0.6); }
+.badge-br {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 800; padding: 2px 7px;
+  border-radius: 4px; background: #009c3b; color: #fff;
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px;
+}
+
+/* Destaque card — usa cor da própria categoria */
+.ec.ec-dest { background: var(--s2); }
+.ec.ec-dest .ec-title { color: var(--t1); }
+.badge-dest {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 700; padding: 2px 7px;
+  border-radius: 4px; color: #fff;
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.3px;
+}
+
+/* Brasil card — Copa (verde) */
+.ec.ec-brasil.ec-copa {
+  background: var(--c-yellow);
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(255,230,0,0.18);
+}
+.ec.ec-brasil.ec-copa .ec-bar { background: #009c3b !important; }
+.ec.ec-brasil.ec-copa .ec-title { color: #0A0A0A; font-size: 15px; font-weight: 900; }
+.ec.ec-brasil.ec-copa .ec-time { color: rgba(0,80,0,0.6); }
+.ec.ec-brasil.ec-copa .ec-where { background: rgba(0,60,0,0.15); color: rgba(0,60,0,0.7); }
+
+/* Brasil card — VNL (azul claro) */
+.ec.ec-brasil.ec-vnl {
+  background: var(--c-yellow);
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(255,230,0,0.18);
+}
+.ec.ec-brasil.ec-vnl .ec-bar { background: #00B4CC !important; }
+.ec.ec-brasil.ec-vnl .ec-title { color: #0A0A0A; font-size: 15px; font-weight: 900; }
+.ec.ec-brasil.ec-vnl .ec-time { color: rgba(0,60,80,0.6); }
+.ec.ec-brasil.ec-vnl .ec-where { background: rgba(0,80,100,0.12); color: rgba(0,60,80,0.7); }
+
+/* Bandeira Brasil SVG inline */
+.flag-br {
+  display: inline-flex; align-items: center; flex-shrink: 0;
+}
+
+/* São João card */
+.ec.ec-sj {
+  background: rgba(232,101,10,0.06);
+  border-color: rgba(232,101,10,0.18);
+}
+.ec.ec-sj .ec-title { color: #f08040; }
+
+/* ═══════════════════════════════════
+   BOTTOM NAV
+═══════════════════════════════════ */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(8,8,8,0.95);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 10px 0 calc(10px + var(--sab));
+  width: 100%;
+}
+.nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; padding: 4px 20px; border-radius: 8px;
+  transition: all 0.15s; user-select: none;
+  border: none; background: none; color: var(--t3);
+}
+.nav-btn.active { color: var(--c-yellow); }
+.nav-btn:active { transform: scale(0.9); }
+.nav-icon { font-size: 18px; line-height: 1; }
+.nav-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════
+   SOBRE SECTION
+═══════════════════════════════════ */
+.sobre-wrap { padding: calc(var(--sat) + var(--sp3)) var(--sp2) 0; display: none; }
+.sobre-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 32px; font-weight: 900; letter-spacing: -0.5px;
+  color: var(--t1); margin-bottom: var(--sp3);
+}
+.sobre-block {
+  background: var(--s1); border: 1px solid var(--b1);
+  border-radius: var(--r-md); padding: var(--sp2);
+  margin-bottom: var(--sp2);
+}
+.sobre-block h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--t2);
+  margin-bottom: var(--sp1); padding-bottom: var(--sp1);
+  border-bottom: 1px solid var(--b1);
+}
+.sobre-block p { font-size: 13px; color: var(--t2); line-height: 1.6; }
+.leg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.leg-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--t2); }
+.leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.version { text-align: center; font-size: 11px; color: var(--t3); margin-top: var(--sp3); padding-bottom: var(--sp1); }
+
+/* ═══════════════════════════════════
+   CALENDAR SECTION
+═══════════════════════════════════ */
+#sec-cal { padding-bottom: var(--sp2); }
+
+/* ═══════════════════════════════════
+   SECTION HOJE
+═══════════════════════════════════ */
+.hoje-wrap { padding: calc(var(--sat) + var(--sp3)) var(--sp2) 0; display: none; }
+.hoje-title-big {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--t3); margin-bottom: 4px;
+}
+.hoje-date-big {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 32px; font-weight: 900; letter-spacing: -0.5px;
+  color: var(--t1); line-height: 1; margin-bottom: var(--sp2);
+}
+.hoje-count {
+  font-size: 13px; color: var(--t2); margin-bottom: var(--sp2);
+}
+.hoje-events-list { display: flex; flex-direction: column; gap: 6px; }
+.hoje-no-events { text-align: center; padding: var(--sp4) 0; color: var(--t3); font-size: 14px; }
+
+/* ═══════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════ */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes card-filter {
+  from { opacity: 0; transform: translateY(4px) scale(0.995); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes events-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes events-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pills-in {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.day-card { animation: card-in 0.35s ease both; }
+.events-animating-out { animation: events-out 0.15s ease forwards; }
+.events-animating-in  { animation: events-in  0.22s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+.pills-animating { animation: pills-in 0.2s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ═══ SPLASH ═══ -->
+<div id="splash">
+  <div class="splash-grid">
+    <div class="splash-grid-q" style="background:#E8001D"></div>
+    <div class="splash-grid-q" style="background:#0033A0"></div>
+    <div class="splash-grid-q" style="background:#FFE600"></div>
+    <div class="splash-grid-q" style="background:#A8C847"></div>
+  </div>
+  <div class="splash-wordmark">
+    <div class="line1">Recife · 2026</div>
+    <div class="line2">JUNHO</div>
+    <div class="line3">Copa · F1 · VNL · São João</div>
+  </div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<div class="app">
+
+  <!-- ═══ CALENDÁRIO ═══ -->
+  <div id="sec-cal">
+
+    <!-- TODAY PANEL -->
+    <div class="today-panel" id="today-panel">
+      <div class="today-accent" id="today-accent"></div>
+      <div class="today-inner">
+        <div class="today-left">
+          <div class="today-eyebrow">Destaques do Dia</div>
+          <div class="today-date" id="td-date">—</div>
+          <div class="today-sub" id="td-sub">—</div>
+        </div>
+        <div class="today-daybadge" id="td-badge">
+          <span class="db-num" id="td-num">—</span>
+          <span class="db-lbl">hoje</span>
+        </div>
+      </div>
+      <div class="today-highlights" id="today-highlights"></div>
+
+      <!-- FILTERS -->
+      <div class="filters-section">
+        <div class="filters-label">Filtrar por</div>
+        <div class="filters-grid" id="filters">
+          <button class="fb" data-cat="sj"   onclick="toggleF('sj')"><span class="dot" style="background:#E8650A"></span>São João</button>
+          <button class="fb" data-cat="copa" onclick="toggleF('copa')"><span class="dot" style="background:#009c3b"></span>Copa</button>
+          <button class="fb" data-cat="vnl"  onclick="toggleF('vnl')"><span class="dot" style="background:#00B4CC"></span>VNL</button>
+          <button class="fb" data-cat="f1"   onclick="toggleF('f1')"><span class="dot" style="background:#E8001D"></span>F1</button>
+          <button class="fb" data-cat="f2"   onclick="toggleF('f2')"><span class="dot" style="background:#5B2D8E"></span>F2</button>
+          <button class="fb" data-cat="pe"   onclick="toggleF('pe')"><span class="dot" style="background:#0033A0"></span>Fut. PE</button>
+          <button class="fb on" data-cat="all" onclick="toggleF('all')">Todos os eventos</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cal" style="padding-top:12px"></div>
+
+  </div>
+
+  <!-- ═══ HOJE ═══ -->
+  <div class="hoje-wrap" id="sec-hoje">
+    <div class="hoje-title-big">Hoje</div>
+    <div class="hoje-date-big" id="hj-date">—</div>
+    <div class="hoje-count" id="hj-count">—</div>
+    <div class="hoje-events-list" id="hj-list"></div>
+    <div class="hoje-no-events" id="hj-empty" style="display:none">Dia livre 🛋️</div>
+  </div></div>
+
+<!-- ═══ NAV ═══ -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-cal"   onclick="goSection('cal')"><span class="nav-icon">📅</span><span class="nav-label">Calendário</span></button>
+  <button class="nav-btn"        id="nav-hoje"  onclick="goSection('hoje')"><span class="nav-icon">⚡</span><span class="nav-label">Hoje</span></button>
+</div>
+
+<script>
+/* ═══════════════════════════════════
+   DESIGN SYSTEM — JS TOKENS
+═══════════════════════════════════ */
+const DS = {
+  copa:  { color:'#009c3b', bg:'rgba(0,156,59,0.12)',    text:'#2ecc71', filBg:'#004d1f', label:'Copa do Mundo',      icon:'⚽' },
+  f1:    { color:'#E8001D', bg:'rgba(232,0,29,0.1)',     text:'#E8001D', filBg:'#8b0000', label:'Fórmula 1',          icon:'🏎' },
+  f2:    { color:'#5B2D8E', bg:'rgba(91,45,142,0.12)',   text:'#9b6fd4', filBg:'#3a1a6e', label:'Fórmula 2',          icon:'🏎' },
+  vnl:   { color:'#00B4CC', bg:'rgba(0,180,204,0.1)',    text:'#00B4CC', filBg:'#005a66', label:'VNL',                icon:'🏐' },
+  spo:   { color:'#0033A0', bg:'rgba(0,51,160,0.12)',    text:'#4d7fff', filBg:'#001a66', label:'Sport',              icon:'⚽' },
+  nau:   { color:'#0033A0', bg:'rgba(0,51,160,0.12)',    text:'#4d7fff', filBg:'#001a66', label:'Náutico',            icon:'⚽' },
+  stz:   { color:'#0033A0', bg:'rgba(0,51,160,0.12)',    text:'#4d7fff', filBg:'#001a66', label:'Santa Cruz',         icon:'⚽' },
+  pe:    { color:'#0033A0', bg:'rgba(0,51,160,0.12)',    text:'#4d7fff', filBg:'#001a66', label:'Futebol PE',         icon:'⚽' },
+  sj:    { color:'#E8650A', bg:'rgba(232,101,10,0.1)',   text:'#f08040',             filBg:'#7a2e00', label:'São João', icon:'🎉' },
+};
+const WD = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const WD_FULL = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const PE_CATS = new Set(['spo','nau','stz']);
+
+/* ═══════════════════════════════════
+   EVENTS DATABASE
+═══════════════════════════════════ */
+const EV={
+1:[{cat:'spo',title:'Sport x Athletic Club — Série B',time:'Confirmando',where:'Ilha do Retiro · ESPN / Disney+'}],
+2:[],
+3:[{cat:'vnl',title:'VNL Feminina · Brasil vs Holanda',time:'20h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true}],
+4:[{cat:'vnl',title:'VNL Feminina · Brasil vs Rep. Dominicana',time:'20h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true}],
+5:[
+  {cat:'f1',title:'GP Mônaco · Treino Livre 1',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f1',title:'GP Mônaco · Treino Livre 2',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'Fórmula 2 · Treino Livre',time:'A confirmar',where:'Bandsports / F1TV'},
+],
+6:[
+  {cat:'vnl',title:'VNL Feminina · Brasil vs Bulgária',time:'11h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
+  {cat:'f1',title:'GP Mônaco · Classificação',time:'11h00',where:'Band / F1TV',destaque:true},
+  {cat:'f2',title:'Fórmula 2 · Classificação',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'copa',title:'Amistoso · Brasil vs Egito',time:'19h00',where:'Cleveland Browns Stadium · Globo / SporTV',brasil:true,destaque:true},
+  {cat:'sj',title:'Olinda — Cortejo do Menino de Rio Doce',time:'A confirmar',where:'Olinda · Orquestra do Maestro Oseas'},
+  {cat:'sj',title:'Forró no Brilho — Escaletado · DJ Babilônia · Queimando em Brasa',time:'A partir das 21h',where:'Rua Ulhoa Cintra 122, Santo Antônio · Recife'},
+],
+7:[
+  {cat:'vnl',title:'VNL Feminina · Brasil vs Itália',time:'14h30',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
+  {cat:'f1',title:'GP Mônaco · Corrida',time:'10h00',where:'Band / F1TV',destaque:true},
+  {cat:'f2',title:'Fórmula 2 · Corridas',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'sj',title:'Olinda — Cortejo Junino da Canja',time:'A confirmar',where:'Olinda · Orquestra da Henrique Dias'},
+],
+8:[],
+9:[{cat:'nau',title:'Náutico vs Fortaleza — Série B',time:'19h00',where:'Aflitos · TV Globo PE / SporTV / Premiere / GE TV'}],
+10:[
+  {cat:'spo',title:'Sport vs Athletic Club — Série B',time:'21h00',where:'Ilha do Retiro · ESPN / Disney+',destaque:true},
+  {cat:'vnl',title:'VNL Masculina · Brasil vs Irã',time:'20h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
+],
+11:[
+  {cat:'copa',title:'🏆 Abertura | Grupo A: México vs África do Sul',time:'16h00',where:'Globo / SporTV · Cidade do México'},
+  {cat:'copa',title:'Grupo A: Rep. da Coreia vs Rep. Tcheca',time:'23h00',where:'Globo / SporTV · Guadalajara'},
+  {cat:'vnl',title:'VNL Masculina · Brasil vs Bélgica',time:'20h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
+  {cat:'sj',title:'Olinda — Festival de Inverno do TCM O Cara (início)',time:'A confirmar',where:'Olinda · Bateu a Química · Paulo Lins · Any Love'},
+],
+12:[
+  {cat:'copa',title:'Grupo B: Canadá vs Bósnia e Herzegovina',time:'16h00',where:'Globo / SporTV · Toronto'},
+  {cat:'copa',title:'Grupo D: EUA vs Paraguai',time:'22h00',where:'Globo / SporTV · Los Angeles'},
+  {cat:'sj',title:'Caminhada do Forró — início das Festas Juninas',time:'A partir das 16h',where:'Bairro do Recife / Polo Rio Branco'},
+  {cat:'sj',title:'Olinda — Festival TCM O Cara (encerramento)',time:'A confirmar',where:'Olinda · Bateu a Química · Paulo Lins · Any Love'},
+  {cat:'sj',title:'Olinda — Cortejo do Frevodrilha',time:'A confirmar',where:'Olinda'},
+],
+13:[
+  {cat:'copa',title:'Grupo B: Catar vs Suíça',time:'16h00',where:'Globo / SporTV · Santa Clara'},
+  {cat:'copa',title:'Grupo C: Brasil vs Marrocos',time:'19h00',where:'Globo / SporTV · Nova York/NJ',brasil:true,destaque:true},
+  {cat:'copa',title:'Grupo C: Haiti vs Escócia',time:'22h00',where:'Globo / SporTV · Boston'},
+  {cat:'copa',title:'Grupo D: Austrália vs Turquia',time:'01h00 (14/06)',where:'Globo / SporTV · Vancouver'},
+  {cat:'vnl',title:'VNL Masculina · Brasil vs Sérvia',time:'11h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
+  {cat:'f1',title:'GP Barcelona · Classificação',time:'11h00',where:'Band / F1TV'},
+  {cat:'f2',title:'Fórmula 2 · Classificação',time:'A confirmar',where:'Bandsports / F1TV'},
+],
+14:[
+  {cat:'copa',title:'Grupo E: Alemanha vs Curaçau',time:'14h00',where:'Globo / SporTV · Houston',destaque:true},
+  {cat:'copa',title:'Grupo F: Holanda vs Japão',time:'17h00',where:'Globo / SporTV · Dallas',destaque:true},
+  {cat:'copa',title:'Grupo E: Costa do Marfim vs Equador',time:'20h00',where:'Globo / SporTV · Filadélfia'},
+  {cat:'copa',title:'Grupo F: Suécia vs Tunísia',time:'23h00',where:'Globo / SporTV · Monterrey'},
+  {cat:'vnl',title:'VNL Masculina · Brasil vs Argentina',time:'18h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
+  {cat:'spo',title:'São Bernardo vs Sport — Série B',time:'11h00',where:'Est. Primeiro de Maio · SporTV / Premiere'},
+  {cat:'nau',title:'Novorizontino vs Náutico — Série B',time:'19h00',where:'Est. Jorge Ismael de Biasi · ESPN / Disney+'},
+  {cat:'stz',title:'Brusque vs Santa Cruz — Série C',time:'11h00',where:'Est. das Nações · SportyNet / Canal do Benja'},
+  {cat:'f1',title:'GP Barcelona · Corrida',time:'10h00',where:'Band / F1TV'},
+  {cat:'f2',title:'Fórmula 2 · Corridas',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'sj',title:'Desfile das Bandeiras — Polo Rio Branco',time:'16h00',where:'Polo Rio Branco · Zé Tamanquinho · Família Salustiano · Salatiel'},
+  {cat:'sj',title:'Olinda — Cortejo do Boi da Macuca',time:'A confirmar',where:'Olinda · Orquestra do Maestro Oseas'},
+],
+15:[
+  {cat:'copa',title:'Grupo G: Bélgica vs Egito',time:'16h00',where:'Globo / SporTV · Seattle',destaque:true},
+  {cat:'copa',title:'Grupo H: Espanha vs Cabo Verde',time:'13h00',where:'Globo / SporTV · Atlanta',destaque:true},
+  {cat:'copa',title:'Grupo H: Arábia Saudita vs Uruguai',time:'19h00',where:'Globo / SporTV · Miami'},
+  {cat:'copa',title:'Grupo G: Irã vs Nova Zelândia',time:'22h00',where:'Globo / SporTV · Los Angeles'},
+],
+16:[
+  {cat:'copa',title:'Grupo I: França vs Senegal',time:'16h00',where:'Globo / SporTV · Nova York/NJ',destaque:true},
+  {cat:'copa',title:'Grupo I: Iraque vs Noruega',time:'19h00',where:'Globo / SporTV · Boston'},
+  {cat:'copa',title:'Grupo J: Argentina vs Argélia',time:'22h00',where:'Globo / SporTV · Kansas City',destaque:true},
+  {cat:'copa',title:'Grupo J: Áustria vs Jordânia',time:'01h00 (17/06)',where:'Globo / SporTV · Santa Clara'},
+],
+17:[
+  {cat:'copa',title:'Grupo K: Portugal vs Rep. Dem. do Congo',time:'14h00',where:'Globo / SporTV · Houston',destaque:true},
+  {cat:'copa',title:'Grupo L: Inglaterra vs Croácia',time:'17h00',where:'Globo / SporTV · Dallas',destaque:true},
+  {cat:'copa',title:'Grupo L: Gana vs Panamá',time:'20h00',where:'Globo / SporTV · Toronto'},
+  {cat:'copa',title:'Grupo K: Uzbequistão vs Colômbia',time:'21h00',where:'Globo / SporTV · Cidade do México'},
+  {cat:'sj',title:'Final — Concurso de Quadrilhas Juninas Adultas',time:'A partir das 17h',where:'Sítio da Trindade'},
+  {cat:'sj',title:'Exposição de Culinária Afro-Brasileira',time:'A partir das 17h',where:'Sítio da Trindade'},
+  {cat:'sj',title:'Rio Branco — Trio Arranca Rabo · Rabecado · Lucinha Guerra',time:'17h00',where:'Polo Rio Branco'},
+],
+18:[
+  {cat:'copa',title:'Grupo A: Rep. Tcheca vs África do Sul',time:'13h00',where:'Globo / SporTV · Atlanta'},
+  {cat:'copa',title:'Grupo B: Suíça vs Bósnia e Herzegovina',time:'16h00',where:'Globo / SporTV · Los Angeles'},
+  {cat:'copa',title:'Grupo B: Canadá vs Catar',time:'19h00',where:'Globo / SporTV · Vancouver'},
+  {cat:'copa',title:'Grupo A: México vs Rep. da Coreia',time:'22h00',where:'Globo / SporTV · Guadalajara'},
+  {cat:'spo',title:'Sport vs Atlético-GO — Série B',time:'21h00',where:'Ilha do Retiro · ESPN / Disney+ / RedeTV!'},
+  {cat:'sj',title:'Orquestra Sinfônica do Recife + Anastácia + Santanna O Cantador',time:'19h30',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Rio Branco — Kelly Rosa · Aracílio Araújo · Miguel Marinho',time:'18h00',where:'Polo Rio Branco'},
+],
+19:[
+  {cat:'copa',title:'Grupo D: EUA vs Austrália',time:'16h00',where:'Globo / SporTV · Seattle'},
+  {cat:'copa',title:'Grupo C: Escócia vs Marrocos',time:'19h00',where:'Globo / SporTV · Boston'},
+  {cat:'copa',title:'Grupo C: Brasil vs Haiti',time:'21h30',where:'Globo / SporTV · Filadélfia',brasil:true,destaque:true},
+  {cat:'copa',title:'Grupo D: Turquia vs Paraguai',time:'00h00 (20/06)',where:'Globo / SporTV · Santa Clara'},
+  {cat:'sj',title:'Procissão dos Santos Juninos',time:'A partir das 18h',where:'Sítio da Trindade'},
+  {cat:'sj',title:'Sítio Trindade — Caju e Castanha · Geraldo Azevedo ⚠️ Pausa às 21h30',time:'18h00',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Rio Branco — Márcia Pequeno · Regente Joaquim ⚠️ Pausa às 21h30',time:'19h50',where:'Polo Rio Branco'},
+  {cat:'sj',title:'Arraiá do Ró — Baião de Barro · Paulo Lins',time:'21h00',where:'Rua São João Batista, Largo do Amparo · Olinda'},
+  {cat:'vnl',title:'VNL Feminina — Semana 2 · Pool Ankara',time:'A confirmar',where:'Ankara, Turquia · SporTV / YouTube VNL'},
+],
+20:[
+  {cat:'copa',title:'Grupo F: Holanda vs Suécia',time:'14h00',where:'Globo / SporTV · Houston',destaque:true},
+  {cat:'copa',title:'Grupo E: Alemanha vs Costa do Marfim',time:'17h00',where:'Globo / SporTV · Toronto',destaque:true},
+  {cat:'copa',title:'Grupo E: Equador vs Curaçau',time:'21h00',where:'Globo / SporTV · Kansas City'},
+  {cat:'copa',title:'Grupo F: Tunísia vs Japão',time:'23h00',where:'Globo / SporTV · Monterrey'},
+  {cat:'nau',title:'Vila Nova vs Náutico — Série B',time:'19h00',where:'Est. OBA · Premiere / GE TV'},
+  {cat:'stz',title:'Santa Cruz vs Ypiranga-RS — Série C',time:'19h00',where:'Arruda · Band Regional / SportyNet'},
+  {cat:'sj',title:'Sítio Trindade — Anastácia · Fim de Feira',time:'21h00',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Rio Branco — Mônica Feijó · Laís Senna · Luciano Magno',time:'21h00',where:'Polo Rio Branco'},
+  {cat:'sj',title:'Olinda — Cortejo Junino do Menino da Tarde',time:'A confirmar',where:'Olinda · Orquestra do Maestro Carlos'},
+  {cat:'sj',title:'Arraiá do Ró — shows',time:'21h00',where:'Rua São João Batista, Largo do Amparo · Olinda'},
+  {cat:'sj',title:'Forró no Brilho — Escaletado · DJ Babilônia · Queimando em Brasa',time:'21h00',where:'Rua Ulhoa Cintra 122, Santo Antônio · Recife'},
+],
+21:[
+  {cat:'copa',title:'Grupo H: Espanha vs Arábia Saudita',time:'13h00',where:'Globo / SporTV · Atlanta',destaque:true},
+  {cat:'copa',title:'Grupo G: Bélgica vs Irã',time:'16h00',where:'Globo / SporTV · Los Angeles',destaque:true},
+  {cat:'copa',title:'Grupo H: Uruguai vs Cabo Verde',time:'19h00',where:'Globo / SporTV · Miami'},
+  {cat:'copa',title:'Grupo G: Nova Zelândia vs Egito',time:'22h00',where:'Globo / SporTV · Vancouver'},
+  {cat:'sj',title:'Sítio Trindade — Novinho da Paraíba · Geraldinho Lins',time:'21h20',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Rio Branco — Walkyria Mendes e shows',time:'21h00',where:'Polo Rio Branco'},
+  {cat:'sj',title:'Palcos Descentralizados — Parque das Graças',time:'A partir das 18h',where:'Parque das Graças'},
+  {cat:'sj',title:'Olinda — Cortejo do Mestre Forró',time:'A confirmar',where:'Olinda'},
+],
+22:[
+  {cat:'copa',title:'Grupo J: Argentina vs Áustria',time:'14h00',where:'Globo / SporTV · Dallas',destaque:true},
+  {cat:'copa',title:'Grupo I: França vs Iraque',time:'18h00',where:'Globo / SporTV · Filadélfia',destaque:true},
+  {cat:'copa',title:'Grupo I: Noruega vs Senegal',time:'21h00',where:'Globo / SporTV · Nova York/NJ'},
+  {cat:'copa',title:'Grupo J: Jordânia vs Argélia',time:'00h00 (23/06)',where:'Globo / SporTV · Santa Clara'},
+  {cat:'sj',title:'Sítio Trindade — Quinteto Violado · Maciel Salu · Capim com Mel',time:'19h50',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Rio Branco — André Lins e shows',time:'21h00',where:'Polo Rio Branco'},
+  {cat:'sj',title:'Palcos Descentralizados — Lagoa do Araçá · Barro · Totó · Cordeiro',time:'A partir das 18h',where:'Lagoa do Araçá · Barro · Totó · Campo Grande · Cordeiro'},
+],
+23:[
+  {cat:'copa',title:'Grupo K: Portugal vs Uzbequistão',time:'14h00',where:'Globo / SporTV · Houston',destaque:true},
+  {cat:'copa',title:'Grupo L: Inglaterra vs Gana',time:'17h00',where:'Globo / SporTV · Boston',destaque:true},
+  {cat:'copa',title:'Grupo L: Panamá vs Croácia',time:'20h00',where:'Globo / SporTV · Toronto',destaque:true},
+  {cat:'copa',title:'Grupo K: Colômbia vs Rep. Dem. do Congo',time:'23h00',where:'Globo / SporTV · Guadalajara'},
+  {cat:'sj',title:'⭐ Véspera de São João — Terezinha do Acordeon · Irah Caldeira · Benil · Petrúcio Amorim',time:'19h30',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'⭐ Véspera de São João — Sarah Leandro · Larissa Lisboa · Isadora Melo',time:'21h00',where:'Polo Rio Branco'},
+  {cat:'sj',title:'Olinda — São João do Birita · Bloco Minhocão · Cortejo dos Amantes do Carnaval',time:'A confirmar',where:'Olinda · Orq. Maestro Oseas / Henrique Dias'},
+],
+24:[
+  {cat:'copa',title:'Grupo B: Suíça vs Canadá',time:'16h00',where:'Globo / SporTV · Vancouver'},
+  {cat:'copa',title:'Grupo B: Bósnia e Herzegovina vs Catar',time:'16h00',where:'Globo / SporTV · Seattle'},
+  {cat:'copa',title:'Grupo C: Brasil vs Escócia — 3ª rodada',time:'19h00',where:'Globo / SporTV · Miami',brasil:true,destaque:true},
+  {cat:'copa',title:'Grupo C: Marrocos vs Haiti',time:'19h00',where:'Globo / SporTV · Atlanta'},
+  {cat:'copa',title:'Grupo A: Rep. Tcheca vs México',time:'22h00',where:'Globo / SporTV · Cidade do México'},
+  {cat:'copa',title:'Grupo A: África do Sul vs Rep. da Coreia',time:'22h00',where:'Globo / SporTV · Monterrey'},
+  {cat:'sj',title:'⭐ Dia de São João — Cristina Amaral · Joyce Alane ⚠️ Pausa às 19h',time:'17h30',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'⭐ Dia de São João — Pecinho Amorim e shows ⚠️ Pausa às 19h',time:'18h00',where:'Polo Rio Branco'},
+  {cat:'vnl',title:'VNL Feminina — Pool Pasig City / Bangkok',time:'A confirmar',where:'SporTV / YouTube VNL'},
+],
+25:[
+  {cat:'copa',title:'Grupo E: Equador vs Alemanha',time:'17h00',where:'Globo / SporTV · Nova York/NJ',destaque:true},
+  {cat:'copa',title:'Grupo E: Curaçau vs Costa do Marfim',time:'17h00',where:'Globo / SporTV · Filadélfia'},
+  {cat:'copa',title:'Grupo F: Japão vs Suécia',time:'20h00',where:'Globo / SporTV · Dallas'},
+  {cat:'copa',title:'Grupo F: Tunísia vs Holanda',time:'20h00',where:'Globo / SporTV · Kansas City',destaque:true},
+  {cat:'copa',title:'Grupo D: Turquia vs EUA',time:'23h00',where:'Globo / SporTV · Los Angeles'},
+  {cat:'copa',title:'Grupo D: Paraguai vs Austrália',time:'23h00',where:'Globo / SporTV · Santa Clara'},
+],
+26:[
+  {cat:'copa',title:'Grupo I: Noruega vs França',time:'16h00',where:'Globo / SporTV · Boston',destaque:true},
+  {cat:'copa',title:'Grupo I: Senegal vs Iraque',time:'16h00',where:'Globo / SporTV · Toronto'},
+  {cat:'copa',title:'Grupo H: Uruguai vs Espanha',time:'21h00',where:'Globo / SporTV · Guadalajara',destaque:true},
+  {cat:'copa',title:'Grupo H: Cabo Verde vs Arábia Saudita',time:'21h00',where:'Globo / SporTV · Houston'},
+  {cat:'copa',title:'Grupo G: Egito vs Irã',time:'00h00 (27/06)',where:'Globo / SporTV · Seattle'},
+  {cat:'copa',title:'Grupo G: Nova Zelândia vs Bélgica',time:'00h00 (27/06)',where:'Globo / SporTV · Vancouver',destaque:true},
+  {cat:'vnl',title:'VNL Masculina — Semana 2 · Pool Orléans/Gliwice/Ljubljana',time:'A confirmar',where:'SporTV / YouTube VNL'},
+  {cat:'sj',title:'Pátio de São Pedro — Festa do Fogo',time:'A partir das 17h',where:'Pátio de São Pedro'},
+  {cat:'sj',title:'Sítio Trindade — Elba Ramalho · Silvério · Assisão · Forró na Caixa',time:'18h00',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Rio Branco — Felipe Costta · César Amaral · Clara Sobral',time:'21h00',where:'Polo Rio Branco'},
+],
+27:[
+  {cat:'copa',title:'Grupo L: Panamá vs Inglaterra',time:'18h00',where:'Globo / SporTV · Nova York/NJ',destaque:true},
+  {cat:'copa',title:'Grupo L: Croácia vs Gana',time:'18h00',where:'Globo / SporTV · Filadélfia',destaque:true},
+  {cat:'copa',title:'Grupo K: Colômbia vs Portugal',time:'20h30',where:'Globo / SporTV · Miami',destaque:true},
+  {cat:'copa',title:'Grupo K: Rep. Dem. do Congo vs Uzbequistão',time:'20h30',where:'Globo / SporTV · Atlanta'},
+  {cat:'copa',title:'Grupo J: Argélia vs Áustria',time:'23h00',where:'Globo / SporTV · Kansas City'},
+  {cat:'copa',title:'Grupo J: Jordânia vs Argentina',time:'23h00',where:'Globo / SporTV · Dallas',destaque:true},
+  {cat:'f1',title:'GP Áustria · Classificação',time:'11h00',where:'Band / F1TV'},
+  {cat:'f2',title:'Fórmula 2 · Classificação',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'stz',title:'Paysandu vs Santa Cruz — Série C',time:'17h00',where:'Curuzu · Band Regional / SportyNet'},
+  {cat:'sj',title:'Pátio de São Pedro — Mazinho de Arcoverde · Claudio Rabeca · Zé Brown',time:'17h00',where:'Pátio de São Pedro'},
+  {cat:'sj',title:'Sítio Trindade — Lia de Itamaracá · Liv Moraes · Josildo Sá · Jorge de Altinho',time:'19h30',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Rio Branco — Alexandre Rodrigues · Nailson Vieira · Banda Coruja',time:'19h30',where:'Polo Rio Branco'},
+  {cat:'sj',title:'Palcos — Ibura · Poço da Panela · Bongi · Vila Tamandaré',time:'A partir das 18h',where:'Ibura · Poço da Panela · Bongi · Vila Tamandaré'},
+  {cat:'sj',title:'Olinda — Cortejo Junino do John Travolta',time:'A confirmar',where:'Olinda · Orquestra do Maestro Oseas'},
+  {cat:'sj',title:'Forró no Brilho — Escaletado · DJ Babilônia · Queimando em Brasa',time:'21h00',where:'Rua Ulhoa Cintra 122, Santo Antônio · Recife'},
+],
+28:[
+  {cat:'f1',title:'GP Áustria · Corrida',time:'10h00',where:'Band / F1TV',destaque:true},
+  {cat:'f2',title:'Fórmula 2 · Corridas',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'spo',title:'Fortaleza vs Sport — Série B',time:'18h30',where:'Arena Castelão · ESPN / Disney+'},
+  {cat:'nau',title:'Náutico vs Goiás — Série B',time:'18h30',where:'Aflitos · TV Globo PE / SporTV / Premiere'},
+  {cat:'sj',title:'⭐ Dia de São Pedro — encerramento do ciclo junino',time:'Dia todo',where:'Sítio Trindade · Rio Branco · Pátio de São Pedro'},
+  {cat:'sj',title:'Pátio de São Pedro — Mestre Ambrósio · Poli · 10 anos da Frei Caneca FM',time:'16h00',where:'Pátio de São Pedro'},
+  {cat:'sj',title:'Sítio Trindade — Maciel Melo · Nando Cordel · Nádia Maia',time:'19h50',where:'Sítio da Trindade — Palco Principal'},
+  {cat:'sj',title:'Palcos — Brasília Teimosa',time:'A partir das 18h',where:'Brasília Teimosa'},
+  {cat:'sj',title:'Olinda — Cortejo Junino do Dono do Mundo',time:'A confirmar',where:'Olinda · Orquestra do Maestro Carlos'},
+  {cat:'vnl',title:'VNL Feminina — Pool Pasig City / Bangkok',time:'A confirmar',where:'SporTV / YouTube VNL'},
+],
+29:[
+  {cat:'sj',title:'Pátio de São Pedro — Caju e Castanha · Siba · Boi Mimoso · último dia',time:'17h00',where:'Pátio de São Pedro'},
+  {cat:'sj',title:'Palcos — Brasília Teimosa · último dia',time:'A partir das 18h',where:'Brasília Teimosa'},
+],
+30:[],
+};
+
+const WEEKS=[
+  {label:'Semana 1',days:[1,2,3,4,5,6,7]},
+  {label:'Semana 2',days:[8,9,10,11,12,13,14]},
+  {label:'Semana 3',days:[15,16,17,18,19,20,21]},
+  {label:'Semana 4',days:[22,23,24,25,26,27,28,29,30]},
+];
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+function getTodayDay(){
+  const n=new Date();
+  if(n.getFullYear()===2026&&n.getMonth()===5) return n.getDate();
+  return null;
+}
+const TODAY=getTodayDay();
+let active=new Set(['all']);
+
+/* ═══════════════════════════════════
+   FILTER LOGIC
+═══════════════════════════════════ */
+function toggleF(c){
+  if(c==='all'){active.clear();active.add('all');}
+  else{
+    active.delete('all');
+    active.has(c)?active.delete(c):active.add(c);
+    if(!active.size)active.add('all');
+  }
+  // Atualiza botões
+  document.querySelectorAll('.fb').forEach(b=>{
+    const on=active.has(b.dataset.cat);
+    b.classList.toggle('on',on);
+    if(on){
+      const d=DS[b.dataset.cat];
+      if(b.dataset.cat==='all'){b.style.background='#F2F2F2';b.style.color='#080808';}
+      else if(d){b.style.background=d.filBg;b.style.color='#F2F2F2';}
+    } else {
+      b.style.background=''; b.style.color='';
+    }
+  });
+  // Atualiza só o conteúdo de cada card — sem reconstruir DOM
+  updateAllDayCards();
+}
+
+function updateAllDayCards(){
+  [].concat(...Object.keys(EV).map(Number)).forEach(d=>{
+    const dc=document.getElementById('dc'+d);
+    if(!dc) return;
+    const evts=(EV[d]||[]).filter(matches);
+    const hasBr=evts.some(e=>e.brasil);
+    const isToday=d===TODAY;
+
+    // Atualiza pills com micro-animação
+    const pillsEl=dc.querySelector('.sum-pills,.free-day');
+    const sumEl=dc.querySelector('.day-summary');
+    if(sumEl){
+      const newPills=evts.length
+        ?`<div class="sum-pills pills-animating">${makePills(evts)}</div>`
+        :'<span class="free-day pills-animating">Livre</span>';
+      const brHint=hasBr?'<div class="brasil-hint">🇧🇷 Jogo do Brasil</div>':'';
+      const todayBadge=isToday?'<span class="today-badge-inline">● Hoje</span>':'';
+      sumEl.innerHTML=todayBadge+newPills+brHint;
+    }
+
+    // Anima saída dos eventos, depois troca conteúdo e anima entrada
+    const eventsEl=dc.querySelector('.day-events');
+    if(!eventsEl) return;
+    const isOpen=dc.classList.contains('open');
+    const newHTML=evts.length
+      ? makeCompBlocks(evts)
+      : '<div style="font-size:12px;color:var(--t3);font-style:italic;padding:4px 0">Sem eventos nesta categoria</div>';
+
+    if(isOpen&&eventsEl.innerHTML.trim()){
+      // Saída suave
+      eventsEl.classList.add('events-animating-out');
+      eventsEl.addEventListener('animationend',function handler(){
+        eventsEl.classList.remove('events-animating-out');
+        eventsEl.removeEventListener('animationend',handler);
+        eventsEl.innerHTML=newHTML;
+        // Entrada suave
+        eventsEl.classList.add('events-animating-in');
+        eventsEl.addEventListener('animationend',function h2(){
+          eventsEl.classList.remove('events-animating-in');
+          eventsEl.removeEventListener('animationend',h2);
+        },{once:true});
+      },{once:true});
+    } else {
+      eventsEl.innerHTML=newHTML;
+    }
+  });
+}
+
+function matches(ev){
+  if(active.has('all'))return true;
+  if(active.has('pe')&&PE_CATS.has(ev.cat))return true;
+  return active.has(ev.cat);
+}
+
+/* ═══════════════════════════════════
+   CARD BUILDERS
+═══════════════════════════════════ */
+function flagBR(w=18,h=13){
+  return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 18 13" xmlns="http://www.w3.org/2000/svg" style="border-radius:1px;flex-shrink:0;vertical-align:middle"><rect width="18" height="13" fill="#009c3b"/><polygon points="9,1.5 17,6.5 9,11.5 1,6.5" fill="#FEDF00"/><circle cx="9" cy="6.5" r="2.8" fill="#002776"/><path d="M6.3,6.1 Q9,5.2 11.7,6.9" stroke="#fff" stroke-width="0.7" fill="none" stroke-linecap="round"/></svg>';
+}
+function makeEC(ev){
+  const d=DS[ev.cat]||{color:'#888',bg:'rgba(136,136,136,0.1)'};
+  let cls='ec';
+  let badge='';
+  let barColor=d.color;
+
+  if(ev.brasil){
+    cls+=' ec-brasil ec-'+ev.cat;
+    badge='<span class="flag-br">'+flagBR(18,13)+'</span>';
+    barColor=ev.cat==='vnl'?'#00B4CC':'#009c3b';
+  } else if(ev.destaque){
+    cls+=' ec-dest';
+    // badge na cor da categoria
+    badge='<span class="badge-dest" style="background:'+d.color+'">★ Destaque</span>';
+    barColor=d.color;
+  } else if(ev.cat==='sj'){
+    cls+=' ec-sj';
+  }
+
+  return `<div class="${cls}">
+    <div class="ec-bar" style="background:${barColor}"></div>
+    <div class="ec-body">
+      <div class="ec-title">${ev.title}</div>
+      <div class="ec-meta">
+        ${ev.time?`<span class="ec-time">⏱ ${ev.time}</span>`:''}
+        ${ev.where?`<span class="ec-where">${ev.where}</span>`:''}
+        ${badge}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* Agrupa eventos por competição dentro de um dia */
+function makeCompBlocks(evts){
+  const order=['copa','f1','f2','vnl','spo','nau','stz','sj'];
+  const groups={};
+  evts.forEach(e=>{
+    const k=e.cat;
+    if(!groups[k])groups[k]=[];
+    groups[k].push(e);
+  });
+  return order.filter(k=>groups[k]).map(k=>{
+    const d=DS[k]||{color:'#888',label:k,icon:''};
+    const evHTML=groups[k].map(makeEC).join('');
+    return `<div class="comp-block">
+      <div class="comp-label">
+        <div class="comp-label-bar" style="background:${d.color}"></div>
+        <div class="comp-label-text">${d.icon} ${d.label}</div>
+      </div>
+      <div class="comp-events">${evHTML}</div>
+    </div>`;
+  }).join('');
+}
+
+/* Summary pills */
+function makePills(evts){
+  const cats={};
+  evts.forEach(e=>{
+    const k=PE_CATS.has(e.cat)?'pe':e.cat;
+    cats[k]=(cats[k]||0)+1;
+  });
+  return Object.entries(cats).map(([k,n])=>{
+    const d=DS[k]||{color:'#888',bg:'rgba(136,136,136,0.1)',icon:'•',text:'#888'};
+    return `<span class="sp" style="background:${d.bg};color:${d.text}">${d.icon} ${n}</span>`;
+  }).join('');
+}
+
+/* Today accent color — primeira competição do dia */
+function getDayAccent(d){
+  const evts=EV[d]||[];
+  if(!evts.length) return '#222';
+  const hasBr=evts.some(e=>e.brasil);
+  if(hasBr) return 'linear-gradient(90deg,#009c3b,#FFE600,#E8001D)';
+  const first=evts[0];
+  return DS[first.cat]?.color||'#333';
+}
+
+/* ═══════════════════════════════════
+   TODAY PANEL
+═══════════════════════════════════ */
+function renderTodayPanel(){
+  const d=TODAY;
+  const tdDate=document.getElementById('td-date');
+  const tdSub=document.getElementById('td-sub');
+  const tdNum=document.getElementById('td-num');
+  const accent=document.getElementById('today-accent');
+  const highlights=document.getElementById('today-highlights');
+  if(!d){
+    if(tdDate) tdDate.textContent='Junho 2026';
+    if(tdSub) tdSub.textContent='Copa do Mundo · F1 · VNL · São João';
+    if(tdNum) tdNum.textContent='—';
+    if(accent) accent.style.background='#FFE600';
+    if(highlights) highlights.innerHTML='';
+    return;
+  }
+  const wd=new Date(2026,5,d).getDay();
+  if(tdDate) tdDate.textContent=WD_FULL[wd]+', '+d+' de junho';
+  if(tdNum) tdNum.textContent=d;
+  if(accent) accent.style.background=getDayAccent(d);
+
+  const evts=EV[d]||[];
+  const brEvts=evts.filter(e=>e.brasil);
+  const f1Evts=evts.filter(e=>e.cat==='f1'&&e.destaque);
+  const copaEvts=evts.filter(e=>e.cat==='copa'&&e.destaque&&!e.brasil);
+  const vnlEvts=evts.filter(e=>e.cat==='vnl'&&e.destaque&&!e.brasil);
+
+  // Sub-texto inteligente
+  const parts=[];
+  if(brEvts.length) parts.push(brEvts.length+' jogo'+(brEvts.length>1?'s':'')+' do Brasil');
+  if(f1Evts.length) parts.push('F1 em pista');
+  if(!evts.length) parts.push('Dia livre');
+  else if(!parts.length) parts.push(evts.length+' evento'+(evts.length>1?'s':''));
+  if(tdSub) tdSub.textContent=parts.join(' · ');
+
+  if(!highlights) return;
+
+  // Prioridade: Brasil > F1 destaque > Copa destaque > VNL destaque > qualquer destaque
+  let hl=[];
+  if(brEvts.length) hl=brEvts.slice(0,2);
+  const remaining=2-hl.length;
+  if(remaining>0){
+    const others=[...f1Evts,...copaEvts,...vnlEvts]
+      .filter(e=>!hl.includes(e)).slice(0,remaining);
+    hl=[...hl,...others];
+  }
+  // Se ainda vazio, pega qualquer destaque
+  if(!hl.length) hl=evts.filter(e=>e.destaque).slice(0,2);
+  // Se ainda vazio, pega primeiros eventos
+  if(!hl.length) hl=evts.slice(0,2);
+
+  if(!hl.length){
+    highlights.innerHTML='<div class="th-empty">Dia livre</div>';
+    return;
+  }
+
+  highlights.innerHTML=hl.map(ev=>{
+    const ds=DS[ev.cat]||{color:'#888'};
+    const isBr=ev.brasil;
+    const accentColor=isBr?(ev.cat==='vnl'?'#00B4CC':'#009c3b'):ds.color;
+
+    let cls='th-card';
+    if(isBr) cls+=' th-brasil th-brasil-'+ev.cat;
+    else if(ev.destaque) cls+=' th-dest';
+
+    const titlePrefix=isBr
+      ? '<span class="flag-br" style="margin-right:5px">'+flagBR(16,11)+'</span>'
+      : ev.destaque ? '<span style="color:'+ds.color+';margin-right:3px">★</span>' : '';
+
+    const badge=isBr
+      ? '<span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;padding:1px 6px;border-radius:3px;background:'+accentColor+';color:#fff;font-family:Barlow Condensed,sans-serif;letter-spacing:0.5px;margin-top:2px;width:fit-content">'+flagBR(12,8)+' Brasil</span>'
+      : ev.destaque ? '<span style="display:inline-flex;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;background:'+ds.color+';color:#fff;font-family:Barlow Condensed,sans-serif;letter-spacing:0.3px;margin-top:2px;width:fit-content">★ Destaque</span>' : '';
+
+    return '<div class="'+cls+'">'
+      +'<div class="th-accent" style="background:'+accentColor+'"></div>'
+      +'<div class="th-body">'
+      +'<div class="th-title" style="display:flex;align-items:center;gap:0">'+titlePrefix+ev.title+'</div>'
+      +(ev.time?'<div class="th-time">⏱ '+ev.time+'</div>':'')
+      +badge
+      +'</div></div>';
+  }).join('');
+}
+
+/* ═══════════════════════════════════
+   MAIN RENDER
+═══════════════════════════════════ */
+function toggleDay(d){
+  const c=document.getElementById('dc'+d);
+  if(c) c.classList.toggle('open');
+}
+
+function render(fromFilter=false){
+  const cal=document.getElementById('cal');
+  const openDays=new Set();
+  document.querySelectorAll('.day-card.open').forEach(el=>{
+    const id=Number(el.id.replace('dc',''));
+    if(id) openDays.add(id);
+  });
+  cal.innerHTML='';
+  let idx=0;
+  WEEKS.forEach(wk=>{
+    const sep=document.createElement('div');
+    sep.className='week-sep';
+    sep.innerHTML=`<span class="week-sep-label">${wk.label}</span><span class="week-sep-line"></span>`;
+    cal.appendChild(sep);
+    wk.days.forEach(d=>{
+      const evts=(EV[d]||[]).filter(matches);
+      const wd=new Date(2026,5,d).getDay();
+      const isToday=d===TODAY;
+      const isPast=TODAY!==null&&d<TODAY;
+      const wasOpen=openDays.has(d);
+      const dc=document.createElement('div');
+      let cls='day-card';
+      if(isToday||wasOpen) cls+=' open';
+      if(isToday) cls+=' today';
+      if(isPast) cls+=' past';
+      dc.className=cls;
+      dc.id='dc'+d;
+      dc.style.animationDelay=(idx*0.025)+'s';
+      idx++;
+      const hasBr=evts.some(e=>e.brasil);
+      const evHTML=evts.length
+        ? makeCompBlocks(evts)
+        : '<div style="font-size:12px;color:var(--t3);font-style:italic;padding:4px 0">Sem eventos nesta categoria</div>';
+      dc.innerHTML=`
+        <div class="day-header" onclick="toggleDay(${d})">
+          <div class="day-num">
+            <span class="dn-number">${d}</span>
+            <span class="dn-wd">${WD[wd]}</span>
+          </div>
+          <div class="day-divider"></div>
+          <div class="day-summary">
+            ${isToday?'<span class="today-badge-inline">● Hoje</span>':''}
+            ${evts.length?`<div class="sum-pills">${makePills(evts)}</div>`:'<span class="free-day">Livre</span>'}
+            ${hasBr?'<div class="brasil-hint">🇧🇷 Jogo do Brasil</div>':''}
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="day-events">${evHTML}</div>`;
+      cal.appendChild(dc);
+    });
+  });
+  if(!fromFilter&&TODAY){
+    requestAnimationFrame(()=>setTimeout(()=>{
+      const el=document.getElementById('dc'+TODAY);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    },800));
+  }
+}
+
+/* ═══════════════════════════════════
+   SECTION NAV
+═══════════════════════════════════ */
+function renderHoje(){
+  const d=TODAY;
+  const hjDate=document.getElementById('hj-date');
+  const hjCount=document.getElementById('hj-count');
+  const hjList=document.getElementById('hj-list');
+  const hjEmpty=document.getElementById('hj-empty');
+  if(!d){
+    if(hjDate) hjDate.textContent='Fora de junho 2026';
+    if(hjCount) hjCount.textContent='';
+    if(hjEmpty){ hjEmpty.style.display='block'; hjEmpty.textContent='Este app é para junho de 2026.'; }
+    return;
+  }
+  const wd=new Date(2026,5,d).getDay();
+  if(hjDate) hjDate.textContent=WD_FULL[wd]+', '+d+' de junho';
+  const evts=EV[d]||[];
+  if(hjCount) hjCount.textContent=evts.length+' evento'+(evts.length!==1?'s':'')+' hoje';
+  if(!evts.length){
+    if(hjEmpty) hjEmpty.style.display='block';
+    if(hjList) hjList.innerHTML='';
+  } else {
+    if(hjEmpty) hjEmpty.style.display='none';
+    if(hjList) hjList.innerHTML=evts.map(makeEC).join('');
+  }
+}
+
+function goSection(s){
+  ['cal','hoje'].forEach(id=>{
+    const el=document.getElementById('sec-'+id);
+    if(!el) return;
+    if(id==='cal'){ el.style.display=s==='cal'?'block':'none'; }
+    else { el.style.display=s===id?'block':'none'; }
+    document.getElementById('nav-'+id)?.classList.toggle('active',id===s);
+  });
+  if(s==='hoje') renderHoje();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+// Botão Todos ativo por padrão
+document.querySelector('.fb[data-cat="all"]').style.cssText='background:#F2F2F2;color:#080808';
+
+render();
+renderTodayPanel();
+renderHoje();
+
+// Splash out
+setTimeout(()=>{
+  document.getElementById('splash').classList.add('out');
+  setTimeout(()=>{ const s=document.getElementById('splash'); if(s)s.remove(); },700);
+},1500);
+
+// PWA
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
