@@ -109,7 +109,7 @@ body {
 }
 .splash-wordmark .line2 {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 36px; font-weight: 900; letter-spacing: -1px;
+  font-size: 36px; font-weight: 800; letter-spacing: -0.5px;
   line-height: 1; color: var(--t1);
 }
 .splash-wordmark .line3 {
@@ -142,126 +142,133 @@ body {
 /* ═══════════════════════════════════
    TODAY PANEL — Drop-down hero
 ═══════════════════════════════════ */
+/* ── PAINEL SUPERIOR FIXO — CLARO ── */
 .today-panel {
   position: sticky; top: 0; z-index: 100;
-  background: var(--s0);
-  padding: calc(var(--sat) + var(--sp2)) var(--sp2) 0;
-  transform-origin: top center;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
-  padding-bottom: 12px;
+  background: #F4F4F6;
+  padding: calc(var(--sat) + var(--sp2)) var(--sp2) 16px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.15);
 }
 
 /* Faixa de cor da competição do dia */
 .today-accent {
   height: 3px; width: 100%;
   margin-bottom: var(--sp2);
-  border-radius: 0;
-  transition: background 0.4s ease;
-  animation: accent-in 0.4s 0.8s ease both;
+  border-radius: 2px;
+  transition: background 0.5s ease;
+  animation: accent-in 0.6s 0.8s ease both;
+  transform-origin: left;
 }
-@keyframes accent-in { from { scaleX(0); opacity: 0; } to { scaleX(1); opacity: 1; } }
+@keyframes accent-in {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
 
 .today-inner {
   display: flex; align-items: flex-start; gap: var(--sp2);
-  animation: today-drop 0.7s 0.6s cubic-bezier(0.34,1.2,0.64,1) both;
+  animation: today-drop 0.7s 0.5s cubic-bezier(0.34,1.2,0.64,1) both;
 }
 @keyframes today-drop {
-  from { opacity: 0; transform: translateY(-24px); }
+  from { opacity: 0; transform: translateY(-20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .today-left { flex: 1; min-width: 0; }
 .today-eyebrow {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--t3);
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: #999;
   margin-bottom: 2px;
 }
 .today-date {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px; font-weight: 900; letter-spacing: -0.5px;
-  line-height: 1; color: var(--t1);
+  font-size: 26px; font-weight: 800; letter-spacing: 0px;
+  line-height: 1; color: #111;
 }
 .today-sub {
-  font-size: 12px; font-weight: 400; color: var(--t2);
-  margin-top: 4px; line-height: 1.4;
+  font-size: 11px; font-weight: 500; color: #666;
+  margin-top: 3px; line-height: 1.4;
 }
 
 .today-daybadge {
   flex-shrink: 0;
-  width: 52px; height: 52px;
-  background: var(--s2); border: 1px solid var(--b1);
+  width: 50px; height: 50px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.1);
   border-radius: var(--r-md);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 .today-daybadge .db-num {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px; font-weight: 900; letter-spacing: -1px;
-  line-height: 1; color: var(--c-yellow);
+  font-size: 22px; font-weight: 700; letter-spacing: -0.3px;
+  line-height: 1; color: #111;
 }
 .today-daybadge .db-lbl {
   font-size: 8px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--t3); margin-top: 1px;
+  text-transform: uppercase; color: #999; margin-top: 1px;
 }
 
 /* Highlights do dia */
 .today-highlights {
-  margin-top: var(--sp2);
-  display: flex; flex-direction: column; gap: 6px;
-  animation: today-drop 0.7s 0.75s cubic-bezier(0.34,1.2,0.64,1) both;
+  margin-top: 10px;
+  display: flex; flex-direction: column; gap: 5px;
+  animation: today-drop 0.7s 0.65s cubic-bezier(0.34,1.2,0.64,1) both;
 }
 .th-card {
   display: flex; align-items: stretch;
-  border-radius: var(--r-sm); overflow: hidden;
-  border: 1px solid var(--b1);
-  background: var(--s1);
-  min-height: 44px;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.07);
+  background: #fff;
+  min-height: 42px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 .th-card.th-brasil {
-  background: var(--c-yellow);
+  background: #FFE600;
   border-color: transparent;
-  box-shadow: 0 4px 20px rgba(255,230,0,0.2);
+  box-shadow: 0 3px 12px rgba(255,214,0,0.35);
 }
-.th-card.th-brasil.th-brasil-vnl { box-shadow: 0 4px 20px rgba(0,180,204,0.2); }
+.th-card.th-brasil.th-brasil-vnl {
+  box-shadow: 0 3px 12px rgba(0,180,204,0.25);
+}
 .th-card.th-dest {
-  background: var(--s2);
-  border-color: var(--b2);
+  background: #fff;
+  border-color: rgba(0,0,0,0.08);
 }
 .th-accent { width: 4px; flex-shrink: 0; }
-.th-body { flex: 1; padding: 8px 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.th-body { flex: 1; padding: 8px 11px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 .th-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px; font-weight: 800; letter-spacing: 0.2px;
-  color: var(--t1); line-height: 1.2;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
+  color: #111; line-height: 1.3;
 }
-.th-card.th-brasil .th-title { color: #0A0A0A; font-size: 15px; }
-.th-time { font-size: 11px; font-weight: 500; color: var(--t2); }
-.th-card.th-brasil .th-time { color: rgba(0,0,0,0.55); }
+.th-card.th-brasil .th-title { color: #0A0A0A; font-size: 14px; font-weight: 700; }
+.th-time { font-size: 11px; font-weight: 500; color: #888; }
+.th-card.th-brasil .th-time { color: rgba(0,0,0,0.5); }
 .th-badge-br {
   display: inline-flex; align-items: center; gap: 3px;
-  font-size: 10px; font-weight: 800; padding: 1px 7px;
+  font-size: 9px; font-weight: 800; padding: 1px 6px;
   border-radius: 4px; background: #009c3b; color: #fff;
   width: fit-content; margin-top: 2px;
 }
 .th-empty {
-  text-align: center; font-size: 13px; color: var(--t3);
-  padding: var(--sp2) 0; font-style: italic;
+  text-align: center; font-size: 12px; color: #aaa;
+  padding: 8px 0; font-style: italic;
 }
 
-/* ═══════════════════════════════════
-   FILTERS GRID
-═══════════════════════════════════ */
+/* ── FILTROS ── */
 .filters-section {
-  padding: var(--sp2) var(--sp2) 0;
-  animation: today-drop 0.6s 0.9s ease both;
+  padding: 10px 0 0;
+  animation: today-drop 0.6s 0.8s ease both;
 }
 .filters-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 9px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--t3);
-  margin-bottom: var(--sp1);
+  font-size: 8px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: #aaa;
+  margin-bottom: 6px;
 }
 .filters-grid {
   display: grid;
@@ -270,24 +277,30 @@ body {
 }
 .fb {
   display: flex; align-items: center; justify-content: center; gap: 5px;
-  padding: 9px 6px;
-  border-radius: var(--r-sm);
-  border: 1px solid var(--b1);
-  background: var(--s2);
+  padding: 8px 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: #fff;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
   text-transform: uppercase;
-  cursor: pointer; color: var(--t2);
+  cursor: pointer; color: #888;
   transition: all 0.15s cubic-bezier(0.4,0,0.2,1);
   user-select: none;
   white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 .fb:active { transform: scale(0.94); }
-.fb.on { color: var(--s0); border-color: transparent; }
+.fb.on { color: #fff; border-color: transparent; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 .fb .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-/* "Todos" ocupa linha inteira */
-.fb[data-cat="all"] { grid-column: span 3; background: var(--s3); color: var(--t2); font-size: 11px; padding: 7px; }
-.fb[data-cat="all"].on { background: var(--t1); color: var(--s0); }
+.fb[data-cat="all"] {
+  grid-column: span 3;
+  background: rgba(0,0,0,0.05);
+  color: #666; font-size: 11px; padding: 7px;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: none;
+}
+.fb[data-cat="all"].on { background: #111; color: #fff; border-color: transparent; }
 
 /* ═══════════════════════════════════
    DIVIDER SEMANA
@@ -298,7 +311,7 @@ body {
 }
 .week-sep-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  font-size: 10px; font-weight: 600; letter-spacing: 2.8px;
   text-transform: uppercase; color: var(--t3);
   white-space: nowrap;
 }
@@ -338,7 +351,7 @@ body {
 }
 .dn-number {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px; font-weight: 900; letter-spacing: -1px;
+  font-size: 26px; font-weight: 800; letter-spacing: -0.3px;
   line-height: 1; color: var(--t1);
 }
 .dn-wd {
@@ -360,7 +373,7 @@ body {
   padding: 2px 7px; border-radius: 4px;
   background: var(--c-yellow); color: var(--s0);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px; font-weight: 800; letter-spacing: 1px;
+  font-size: 10px; font-weight: 600; letter-spacing: 1.2px;
   text-transform: uppercase; width: fit-content;
   margin-bottom: 2px;
 }
@@ -375,7 +388,7 @@ body {
   text-transform: uppercase;
 }
 .free-day { font-size: 12px; color: var(--t3); font-style: italic; }
-.brasil-hint { font-size: 10px; font-weight: 700; color: #4cdb7a; letter-spacing: 0.5px; }
+.brasil-hint { font-size: 10px; font-weight: 500; color: #4cdb7a; letter-spacing: 0.8px; }
 
 .chevron {
   width: 16px; height: 16px; flex-shrink: 0; color: var(--t3);
@@ -402,7 +415,7 @@ body {
 .comp-label-bar { width: 3px; height: 12px; border-radius: 2px; flex-shrink: 0; }
 .comp-label-text {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 9px; font-weight: 800; letter-spacing: 2px;
+  font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
   text-transform: uppercase; color: var(--t3);
 }
 .comp-events { display: flex; flex-direction: column; gap: 4px; }
@@ -420,8 +433,8 @@ body {
 .ec-body { flex: 1; padding: 9px 12px; }
 .ec-title {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px; font-weight: 700; letter-spacing: 0.2px;
-  color: var(--t1); line-height: 1.3;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.3px;
+  color: var(--t1); line-height: 1.4;
 }
 .ec-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; align-items: center; }
 .ec-time {
@@ -467,7 +480,7 @@ body {
   box-shadow: 0 4px 16px rgba(255,230,0,0.18);
 }
 .ec.ec-brasil.ec-copa .ec-bar { background: #009c3b !important; }
-.ec.ec-brasil.ec-copa .ec-title { color: #0A0A0A; font-size: 15px; font-weight: 900; }
+.ec.ec-brasil.ec-copa .ec-title { color: #0A0A0A; font-size: 14px; font-weight: 700; }
 .ec.ec-brasil.ec-copa .ec-time { color: rgba(0,80,0,0.6); }
 .ec.ec-brasil.ec-copa .ec-where { background: rgba(0,60,0,0.15); color: rgba(0,60,0,0.7); }
 
@@ -478,7 +491,7 @@ body {
   box-shadow: 0 4px 16px rgba(255,230,0,0.18);
 }
 .ec.ec-brasil.ec-vnl .ec-bar { background: #00B4CC !important; }
-.ec.ec-brasil.ec-vnl .ec-title { color: #0A0A0A; font-size: 15px; font-weight: 900; }
+.ec.ec-brasil.ec-vnl .ec-title { color: #0A0A0A; font-size: 14px; font-weight: 700; }
 .ec.ec-brasil.ec-vnl .ec-time { color: rgba(0,60,80,0.6); }
 .ec.ec-brasil.ec-vnl .ec-where { background: rgba(0,80,100,0.12); color: rgba(0,60,80,0.7); }
 
@@ -517,7 +530,7 @@ body {
 .nav-icon { font-size: 18px; line-height: 1; }
 .nav-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
 }
 
 /* ═══════════════════════════════════
@@ -704,12 +717,12 @@ const EV={
 5:[
   {cat:'f1',title:'GP Mônaco · Treino Livre 1',time:'A confirmar',where:'Bandsports / F1TV'},
   {cat:'f1',title:'GP Mônaco · Treino Livre 2',time:'A confirmar',where:'Bandsports / F1TV'},
-  {cat:'f2',title:'Fórmula 2 · Treino Livre',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Mônaco · Classificação Grupo A e B',time:'10h10',where:'Bandsports / F1TV'},
 ],
 6:[
   {cat:'vnl',title:'VNL Feminina · Brasil vs Bulgária',time:'11h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
   {cat:'f1',title:'GP Mônaco · Classificação',time:'11h00',where:'Band / F1TV',destaque:true},
-  {cat:'f2',title:'Fórmula 2 · Classificação',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Mônaco · Corrida Sprint',time:'10h15',where:'Bandsports / F1TV'},
   {cat:'copa',title:'Amistoso · Brasil vs Egito',time:'19h00',where:'Cleveland Browns Stadium · Globo / SporTV',brasil:true,destaque:true},
   {cat:'sj',title:'Olinda — Cortejo do Menino de Rio Doce',time:'A confirmar',where:'Olinda · Orquestra do Maestro Oseas'},
   {cat:'sj',title:'Forró no Brilho — Escaletado · DJ Babilônia · Queimando em Brasa',time:'A partir das 21h',where:'Rua Ulhoa Cintra 122, Santo Antônio · Recife'},
@@ -717,7 +730,7 @@ const EV={
 7:[
   {cat:'vnl',title:'VNL Feminina · Brasil vs Itália',time:'14h30',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
   {cat:'f1',title:'GP Mônaco · Corrida',time:'10h00',where:'Band / F1TV',destaque:true},
-  {cat:'f2',title:'Fórmula 2 · Corridas',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Mônaco · Corrida Principal (Feature)',time:'05h25',where:'Bandsports / F1TV'},
   {cat:'sj',title:'Olinda — Cortejo Junino da Canja',time:'A confirmar',where:'Olinda · Orquestra da Henrique Dias'},
 ],
 8:[],
@@ -735,6 +748,8 @@ const EV={
 12:[
   {cat:'copa',title:'Grupo B: Canadá vs Bósnia e Herzegovina',time:'16h00',where:'Globo / SporTV · Toronto'},
   {cat:'copa',title:'Grupo D: EUA vs Paraguai',time:'22h00',where:'Globo / SporTV · Los Angeles'},
+  {cat:'f1',title:'GP Barcelona · Treino Livre 1',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Barcelona · Classificação',time:'11h00',where:'Bandsports / F1TV'},
   {cat:'sj',title:'Caminhada do Forró — início das Festas Juninas',time:'A partir das 16h',where:'Bairro do Recife / Polo Rio Branco'},
   {cat:'sj',title:'Olinda — Festival TCM O Cara (encerramento)',time:'A confirmar',where:'Olinda · Bateu a Química · Paulo Lins · Any Love'},
   {cat:'sj',title:'Olinda — Cortejo do Frevodrilha',time:'A confirmar',where:'Olinda'},
@@ -746,7 +761,7 @@ const EV={
   {cat:'copa',title:'Grupo D: Austrália vs Turquia',time:'01h00 (14/06)',where:'Globo / SporTV · Vancouver'},
   {cat:'vnl',title:'VNL Masculina · Brasil vs Sérvia',time:'11h00',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
   {cat:'f1',title:'GP Barcelona · Classificação',time:'11h00',where:'Band / F1TV'},
-  {cat:'f2',title:'Fórmula 2 · Classificação',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Barcelona · Corrida Sprint',time:'09h15',where:'Bandsports / F1TV'},
 ],
 14:[
   {cat:'copa',title:'Grupo E: Alemanha vs Curaçau',time:'14h00',where:'Globo / SporTV · Houston',destaque:true},
@@ -758,7 +773,7 @@ const EV={
   {cat:'nau',title:'Novorizontino vs Náutico — Série B',time:'19h00',where:'Est. Jorge Ismael de Biasi · ESPN / Disney+'},
   {cat:'stz',title:'Brusque vs Santa Cruz — Série C',time:'11h00',where:'Est. das Nações · SportyNet / Canal do Benja'},
   {cat:'f1',title:'GP Barcelona · Corrida',time:'10h00',where:'Band / F1TV'},
-  {cat:'f2',title:'Fórmula 2 · Corridas',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Barcelona · Corrida Principal (Feature)',time:'06h35',where:'Bandsports / F1TV'},
   {cat:'sj',title:'Desfile das Bandeiras — Polo Rio Branco',time:'16h00',where:'Polo Rio Branco · Zé Tamanquinho · Família Salustiano · Salatiel'},
   {cat:'sj',title:'Olinda — Cortejo do Boi da Macuca',time:'A confirmar',where:'Olinda · Orquestra do Maestro Oseas'},
 ],
@@ -870,6 +885,8 @@ const EV={
   {cat:'copa',title:'Grupo H: Cabo Verde vs Arábia Saudita',time:'21h00',where:'Globo / SporTV · Houston'},
   {cat:'copa',title:'Grupo G: Egito vs Irã',time:'00h00 (27/06)',where:'Globo / SporTV · Seattle'},
   {cat:'copa',title:'Grupo G: Nova Zelândia vs Bélgica',time:'00h00 (27/06)',where:'Globo / SporTV · Vancouver',destaque:true},
+  {cat:'f1',title:'GP Áustria · Treino Livre 1',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Áustria · Classificação',time:'11h00',where:'Bandsports / F1TV'},
   {cat:'vnl',title:'VNL Masculina — Semana 2 · Pool Orléans/Gliwice/Ljubljana',time:'A confirmar',where:'SporTV / YouTube VNL'},
   {cat:'sj',title:'Pátio de São Pedro — Festa do Fogo',time:'A partir das 17h',where:'Pátio de São Pedro'},
   {cat:'sj',title:'Sítio Trindade — Elba Ramalho · Silvério · Assisão · Forró na Caixa',time:'18h00',where:'Sítio da Trindade — Palco Principal'},
@@ -883,7 +900,7 @@ const EV={
   {cat:'copa',title:'Grupo J: Argélia vs Áustria',time:'23h00',where:'Globo / SporTV · Kansas City'},
   {cat:'copa',title:'Grupo J: Jordânia vs Argentina',time:'23h00',where:'Globo / SporTV · Dallas',destaque:true},
   {cat:'f1',title:'GP Áustria · Classificação',time:'11h00',where:'Band / F1TV'},
-  {cat:'f2',title:'Fórmula 2 · Classificação',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Áustria · Corrida Sprint',time:'09h15',where:'Bandsports / F1TV'},
   {cat:'stz',title:'Paysandu vs Santa Cruz — Série C',time:'17h00',where:'Curuzu · Band Regional / SportyNet'},
   {cat:'sj',title:'Pátio de São Pedro — Mazinho de Arcoverde · Claudio Rabeca · Zé Brown',time:'17h00',where:'Pátio de São Pedro'},
   {cat:'sj',title:'Sítio Trindade — Lia de Itamaracá · Liv Moraes · Josildo Sá · Jorge de Altinho',time:'19h30',where:'Sítio da Trindade — Palco Principal'},
@@ -894,7 +911,7 @@ const EV={
 ],
 28:[
   {cat:'f1',title:'GP Áustria · Corrida',time:'10h00',where:'Band / F1TV',destaque:true},
-  {cat:'f2',title:'Fórmula 2 · Corridas',time:'A confirmar',where:'Bandsports / F1TV'},
+  {cat:'f2',title:'F2 Áustria · Corrida Principal (Feature)',time:'05h05',where:'Bandsports / F1TV'},
   {cat:'spo',title:'Fortaleza vs Sport — Série B',time:'18h30',where:'Arena Castelão · ESPN / Disney+'},
   {cat:'nau',title:'Náutico vs Goiás — Série B',time:'18h30',where:'Aflitos · TV Globo PE / SporTV / Premiere'},
   {cat:'sj',title:'⭐ Dia de São Pedro — encerramento do ciclo junino',time:'Dia todo',where:'Sítio Trindade · Rio Branco · Pátio de São Pedro'},
@@ -945,7 +962,7 @@ function toggleF(c){
     b.classList.toggle('on',on);
     if(on){
       const d=DS[b.dataset.cat];
-      if(b.dataset.cat==='all'){b.style.background='#F2F2F2';b.style.color='#080808';}
+      if(b.dataset.cat==='all'){b.style.background='#111';b.style.color='#fff';}
       else if(d){b.style.background=d.filBg;b.style.color='#F2F2F2';}
     } else {
       b.style.background=''; b.style.color='';
@@ -1288,7 +1305,7 @@ function goSection(s){
    INIT
 ═══════════════════════════════════ */
 // Botão Todos ativo por padrão
-document.querySelector('.fb[data-cat="all"]').style.cssText='background:#F2F2F2;color:#080808';
+document.querySelector('.fb[data-cat="all"]').style.cssText='background:#111111;color:#ffffff';
 
 render();
 renderTodayPanel();
