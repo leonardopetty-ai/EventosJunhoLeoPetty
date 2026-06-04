@@ -146,10 +146,86 @@ body {
 .today-panel {
   position: sticky; top: 0; z-index: 100;
   background: #F4F4F6;
-  padding: calc(var(--sat) + var(--sp2)) var(--sp2) 16px;
+  padding: calc(var(--sat) + 14px) var(--sp2) 14px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.15);
+  transition: padding 0.35s cubic-bezier(0.4,0,0.2,1),
+              border-radius 0.35s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+}
+
+/* Estado compacto */
+.today-panel.compact {
+  padding: calc(var(--sat) + 6px) var(--sp2) 6px;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+/* Mini bar */
+.mini-bar {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.25s ease;
+}
+.today-panel.compact .mini-bar {
+  max-height: 40px;
+  opacity: 1;
+}
+.mini-accent {
+  height: 2px; width: 100%; margin-bottom: 6px;
+  border-radius: 2px;
+  transition: background 0.4s ease;
+}
+.mini-content {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 2px;
+}
+.mini-day {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  color: #999; text-transform: uppercase; flex-shrink: 0;
+}
+.mini-event {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 700; color: #111;
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: 0.2px;
+}
+.mini-time {
+  font-size: 11px; font-weight: 500; color: #888;
+  flex-shrink: 0;
+}
+
+/* Conteúdo completo */
+.panel-full {
+  overflow: hidden;
+  max-height: 600px;
+  opacity: 1;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.3s ease;
+}
+.today-panel.compact .panel-full {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* Filtros: fade-out ao compactar */
+#filters-section {
+  overflow: hidden;
+  max-height: 200px;
+  opacity: 1;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.25s ease,
+              margin-top 0.3s ease;
+}
+.today-panel.compact #filters-section {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  pointer-events: none;
 }
 
 /* Faixa de cor da competição do dia */
@@ -639,22 +715,35 @@ body {
 
     <!-- TODAY PANEL -->
     <div class="today-panel" id="today-panel">
-      <div class="today-accent" id="today-accent"></div>
-      <div class="today-inner">
-        <div class="today-left">
-          <div class="today-eyebrow">Destaques do Dia</div>
-          <div class="today-date" id="td-date">—</div>
-          <div class="today-sub" id="td-sub">—</div>
-        </div>
-        <div class="today-daybadge" id="td-badge">
-          <span class="db-num" id="td-num">—</span>
-          <span class="db-lbl">hoje</span>
+      <!-- MINI BAR — visível só ao scrollar -->
+      <div class="mini-bar" id="mini-bar">
+        <div class="mini-accent" id="mini-accent"></div>
+        <div class="mini-content" id="mini-content">
+          <span class="mini-day" id="mini-day">—</span>
+          <span class="mini-event" id="mini-event">—</span>
+          <span class="mini-time" id="mini-time">—</span>
         </div>
       </div>
-      <div class="today-highlights" id="today-highlights"></div>
+
+      <!-- CONTEÚDO COMPLETO -->
+      <div class="panel-full" id="panel-full">
+        <div class="today-accent" id="today-accent"></div>
+        <div class="today-inner">
+          <div class="today-left">
+            <div class="today-eyebrow">Destaques do Dia</div>
+            <div class="today-date" id="td-date">—</div>
+            <div class="today-sub" id="td-sub">—</div>
+          </div>
+          <div class="today-daybadge" id="td-badge">
+            <span class="db-num" id="td-num">—</span>
+            <span class="db-lbl">hoje</span>
+          </div>
+        </div>
+        <div class="today-highlights" id="today-highlights"></div>
+      </div>
 
       <!-- FILTERS -->
-      <div class="filters-section">
+      <div class="filters-section" id="filters-section">
         <div class="filters-label">Filtrar por</div>
         <div class="filters-grid" id="filters">
           <button class="fb" data-cat="sj"   onclick="toggleF('sj')"><span class="dot" style="background:#E8650A"></span>São João</button>
@@ -666,6 +755,7 @@ body {
           <button class="fb on" data-cat="all" onclick="toggleF('all')">Todos os eventos</button>
         </div>
       </div>
+      </div><!-- /panel-full -->
     </div>
 
     <div id="cal" style="padding-top:12px"></div>
@@ -728,6 +818,7 @@ const EV={
   {cat:'sj',title:'Forró no Brilho — Escaletado · DJ Babilônia · Queimando em Brasa',time:'A partir das 21h',where:'Rua Ulhoa Cintra 122, Santo Antônio · Recife'},
 ],
 7:[
+  {cat:'sj',title:'Forró Orquestrado do Maestro Oseas — Lançamento! Acesso gratuito',time:'17h00',where:'Bar do Ró · Rua São João Batista, Largo do Amparo · Olinda'},
   {cat:'vnl',title:'VNL Feminina · Brasil vs Itália',time:'14h30',where:'Arena Nilson Nelson · SporTV / YouTube VNL',brasil:true},
   {cat:'f1',title:'GP Mônaco · Corrida',time:'10h00',where:'Band / F1TV',destaque:true},
   {cat:'f2',title:'F2 Mônaco · Corrida Principal (Feature)',time:'05h25',where:'Bandsports / F1TV'},
@@ -1029,6 +1120,36 @@ function matches(ev){
 /* ═══════════════════════════════════
    CARD BUILDERS
 ═══════════════════════════════════ */
+/* ── FLAG EMOJIS POR PAÍS ── */
+const COUNTRY_FLAGS = {
+  'México':'🇲🇽','África do Sul':'🇿🇦','Rep. da Coreia':'🇰🇷','Rep. Tcheca':'🇨🇿',
+  'Canadá':'🇨🇦','Bósnia e Herzegovina':'🇧🇦','EUA':'🇺🇸','Paraguai':'🇵🇾',
+  'Catar':'🇶🇦','Suíça':'🇨🇭','Brasil':'🇧🇷','Marrocos':'🇲🇦',
+  'Haiti':'🇭🇹','Escócia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Austrália':'🇦🇺','Turquia':'🇹🇷',
+  'Alemanha':'🇩🇪','Curaçau':'🇨🇼','Costa do Marfim':'🇨🇮','Equador':'🇪🇨',
+  'Holanda':'🇳🇱','Japão':'🇯🇵','Suécia':'🇸🇪','Tunísia':'🇹🇳',
+  'Espanha':'🇪🇸','Cabo Verde':'🇨🇻','Arábia Saudita':'🇸🇦','Uruguai':'🇺🇾',
+  'Bélgica':'🇧🇪','Egito':'🇪🇬','Irã':'🇮🇷','Nova Zelândia':'🇳🇿',
+  'França':'🇫🇷','Senegal':'🇸🇳','Iraque':'🇮🇶','Noruega':'🇳🇴',
+  'Argentina':'🇦🇷','Argélia':'🇩🇿','Áustria':'🇦🇹','Jordânia':'🇯🇴',
+  'Portugal':'🇵🇹','Rep. Dem. do Congo':'🇨🇩','Uzbequistão':'🇺🇿','Colômbia':'🇨🇴',
+  'Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croácia':'🇭🇷','Gana':'🇬🇭','Panamá':'🇵🇦',
+  'Rep. Dominicana':'🇩🇴','Bulgária':'🇧🇬','Itália':'🇮🇹','Sérvia':'🇷🇸',
+  'Polônia':'🇵🇱','China':'🇨🇳','Tailândia':'🇹🇭','Alemanha':'🇩🇪',
+};
+
+function addFlags(title) {
+  // Substitui "País A vs País B" → "🇽🇽 País A vs 🇾🇾 País B"
+  return title.replace(/([A-ZÀ-Ú][^·🏆⭐★
+]{2,30}?)(\s+vs\s+)([A-ZÀ-Ú][^·🏆⭐★
+]{2,30}?)(?=[^A-Za-zÀ-ú]|$)/g,
+    (match, a, vs, b) => {
+      const fa = COUNTRY_FLAGS[a.trim()] || '';
+      const fb = COUNTRY_FLAGS[b.trim()] || '';
+      return (fa?fa+' ':'')+a+vs+(fb?fb+' ':'')+b;
+    });
+}
+
 function flagBR(w=18,h=13){
   return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 18 13" xmlns="http://www.w3.org/2000/svg" style="border-radius:1px;flex-shrink:0;vertical-align:middle"><rect width="18" height="13" fill="#009c3b"/><polygon points="9,1.5 17,6.5 9,11.5 1,6.5" fill="#FEDF00"/><circle cx="9" cy="6.5" r="2.8" fill="#002776"/><path d="M6.3,6.1 Q9,5.2 11.7,6.9" stroke="#fff" stroke-width="0.7" fill="none" stroke-linecap="round"/></svg>';
 }
@@ -1054,7 +1175,7 @@ function makeEC(ev){
   return `<div class="${cls}">
     <div class="ec-bar" style="background:${barColor}"></div>
     <div class="ec-body">
-      <div class="ec-title">${ev.title}</div>
+      <div class="ec-title">${(ev.cat==='copa'||ev.cat==='vnl')?addFlags(ev.title):ev.title}</div>
       <div class="ec-meta">
         ${ev.time?`<span class="ec-time">⏱ ${ev.time}</span>`:''}
         ${ev.where?`<span class="ec-where">${ev.where}</span>`:''}
@@ -1187,7 +1308,7 @@ function renderTodayPanel(){
     return '<div class="'+cls+'">'
       +'<div class="th-accent" style="background:'+accentColor+'"></div>'
       +'<div class="th-body">'
-      +'<div class="th-title" style="display:flex;align-items:center;gap:0">'+titlePrefix+ev.title+'</div>'
+      +'<div class="th-title" style="display:flex;align-items:center;gap:0">'+titlePrefix+((ev.cat==="copa"||ev.cat==="vnl")?addFlags(ev.title):ev.title)+'</div>'
       +(ev.time?'<div class="th-time">⏱ '+ev.time+'</div>':'')
       +badge
       +'</div></div>';
@@ -1310,6 +1431,56 @@ document.querySelector('.fb[data-cat="all"]').style.cssText='background:#111111;
 render();
 renderTodayPanel();
 renderHoje();
+
+// ── SCROLL COLLAPSE ──
+(function(){
+  const panel = document.getElementById('today-panel');
+  const miniAccent = document.getElementById('mini-accent');
+  const miniDay = document.getElementById('mini-day');
+  const miniEvent = document.getElementById('mini-event');
+  const miniTime = document.getElementById('mini-time');
+  const THRESHOLD = 60;
+  let ticking = false;
+  let lastCompact = false;
+
+  function populateMini(){
+    const d = TODAY;
+    if(!d){ if(miniEvent) miniEvent.textContent='Junho 2026'; return; }
+    const evts = EV[d]||[];
+    // Prioridade: Brasil > destaque > primeiro evento
+    const best = evts.find(e=>e.brasil) || evts.find(e=>e.destaque) || evts[0];
+    if(!best){ if(miniEvent) miniEvent.textContent='Dia livre'; return; }
+    const wd = new Date(2026,5,d).getDay();
+    const WDP = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    if(miniDay) miniDay.textContent = WDP[wd]+' '+d+'/06';
+    // Título resumido: remover prefixo "Grupo X: "
+    const shortTitle = best.title.replace(/^(🏆\s*)?(Grupo\s+\w+:\s*)/i,'').replace(/^Amistoso\s·\s/,'');
+    if(miniEvent) miniEvent.textContent = (best.brasil?'🇧🇷 ':best.destaque?'★ ':'')+shortTitle;
+    if(miniTime) miniTime.textContent = best.time||'';
+    // Accent color
+    const accentColor = best.brasil
+      ? (best.cat==='vnl'?'linear-gradient(90deg,#00B4CC,#FFE600)':'linear-gradient(90deg,#009c3b,#FFE600,#E8001D)')
+      : (DS[best.cat]?.color||'#888');
+    const acEl = document.getElementById('today-accent');
+    if(miniAccent) miniAccent.style.background = acEl ? acEl.style.background : accentColor;
+  }
+
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(()=>{
+      const compact = window.scrollY > THRESHOLD;
+      if(compact !== lastCompact){
+        panel.classList.toggle('compact', compact);
+        lastCompact = compact;
+      }
+      ticking = false;
+    });
+  }
+
+  populateMini();
+  window.addEventListener('scroll', onScroll, {passive:true});
+})();
 
 // Splash out
 setTimeout(()=>{
